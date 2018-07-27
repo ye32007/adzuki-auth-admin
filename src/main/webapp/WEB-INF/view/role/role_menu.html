@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+	<title>菜单管理</title>
+	<link rel="stylesheet" th:href="@{/resources/bootstrap/css/bootstrap.min.css}"/>	
+	<link rel="stylesheet" th:href="@{/resources/dist/css/skins/_all-skins.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/AdminLTE.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/font-awesome.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/ionicons.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/e7/css/e7-0.2.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/plugins/ligerUI/ligerui-tree.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/plugins/ligerUI/ligerui-menu.css}"/>
+	
+	<style type="text/css">
+		#treeDiv{
+			width: 100% !important;
+		}
+		.l-tree span{
+			display: inline;
+			margin-left: 10px;
+		}
+	</style>
+</head>
+
+<body style="background: white;overflow-y:auto;">
+	<div class="panel" style="margin-bottom: 70px;" >
+	   <div class="panel-default panel-body">
+	    	<ul id="treeDiv"></ul>
+	   </div> 
+	</div>
+	
+	<!-- /.content -->	
+	 
+	<script th:src="@{/resources/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootbox/bootbox.min.js}"></script>
+	<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootstrapValidator/bootstrapValidator.min.js}"></script>
+	<script th:src="@{/resources/dist/js/app.min.js}"></script>
+	<script th:src="@{/resources/e7/e7util-0.2.js}"></script>
+	<script th:src="@{/resources/plugins/ligerUI/base.js}"></script>
+	<script th:src="@{/resources/plugins/ligerUI/ligerTree.js}"></script>
+	<script th:src="@{/resources/plugins/ligerUI/ligerMenu.js}"></script>
+	
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var ids = JSON.parse([[${ids}]]);
+		$(function() {
+			tree = $("#treeDiv").ligerTree({
+				url : [[@{/menu/queryAll}]],
+				textFieldName : 'name',
+				idFieldName : 'id',
+				parentIDFieldName : 'pid',
+				needCancel : false,
+				checkbox : true,
+				parentIcon : true,
+				childIcon : true,
+				iconFieldName : 'icon',
+				onSuccess : function() {
+		            for(var i = 0; i < ids.length; i++){
+		            	 var node = tree.getDataByID(ids[i]);
+		            	if(!tree.hasChildren(node)) { 
+		            		$(tree.getNodeDom(node)).find('.l-checkbox').click(); 
+		            	}
+		        	}
+				}
+			});
+			
+		});
+		
+		function getSelected(){
+			var nodes = tree.getChecked();
+			var selectArr = [];
+			
+			for (var i = 0; i < nodes.length; i++) {
+				var ndata = nodes[i].data;
+				push(selectArr, ndata);
+			}
+			
+			return selectArr;
+		}
+		
+		function push(selectArr, ndata) {
+			var id = ndata.id;
+			
+			for (var i = 0; i < selectArr.length; i++) {
+				if(id == selectArr[i]) {
+					return;
+				}
+			}
+			
+			selectArr.push(id);
+			if(ndata.pid!= null && ndata.pid != 0) {
+				var pnode = tree.getDataByID(ndata.pid);
+				if(pnode != null) {
+					push(selectArr, pnode);
+				}
+			}
+			
+		}
+		
+		/*]]>*/
+	</script>
+	
+</body>
+</html>

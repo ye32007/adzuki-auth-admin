@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+        layout:decorator="templates/list_modal_layout">
+
+<head>
+	<title>业务代码</title>
+</head>
+
+<body>
+	<div layout:fragment="query_form">
+		<div class="col-lg-3 col-md-4 col-sm-6">
+			<div class="form-group">
+				<label for="" class="col-sm-4 control-label">类型代码：</label>
+				<div class="col-sm-8">
+					<input name="tcode" class="form-control" placeholder="类型代码"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-4 col-sm-6">
+			<div class="form-group">
+				<label for="" class="col-sm-4 control-label">类型名称：</label>
+				<div class="col-sm-8">
+					<input name="tname" class="form-control" placeholder="类型名称"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div layout:fragment="detail_form">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">类型代码 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="tcode" class="form-control" placeholder="类型代码" maxlength="50"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">类型名称 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="tname" class="form-control" placeholder="类型名称" maxlength="50"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="" class="col-sm-2 control-label">代码列表 <span style="color:red">*</span></label>
+					<div class="col-sm-10">
+						<textarea name="content" class="form-control" placeholder="代码列表" rows="12" maxlength="2000"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" layout:fragment="foot_script">
+		/*<![CDATA[*/
+		var pageSetting = {
+			modelName : '业务代码',
+			resetPath : '.',
+			buttons : [
+				{'text':'添加', 'class':'btn-default', 'click':'showAddDialog'},
+				{'text':'打开', 'class':'btn-default', 'click':'showEditDialog'},
+				{'text':'删除', 'class':'btn-default', 'click':'del'},
+				{'text':'刷新', 'class':'btn-default', 'click':'refresh'}
+			]
+		};
+		
+		$(function(){
+			//数据表结构定义
+			$('#tbl_query').e7table({
+				url : 'query',
+				pageSize: 20,
+				autoLoading: true,			//控件初始化后，自动远程请求数据
+				selectType: 'single',
+				sortName: 'createTime',		//排序列名
+				sortOrder: 'desc',			//排序方向
+				columns : [
+					{title: '类型代码', field: 'tcode'},
+					{title: '类型名称', field: 'tname'},
+					{title: '代码列表', field: 'content', align:'left', formatter: function(value, row, index) {
+						return E7.replaceAll(value, '\n', '<br>');
+					}}
+				],
+				onDblclick : function(index, row) {
+					showEditDialog();
+				}
+			});
+			
+			validatorInit();
+		});
+		
+		/***
+		 * 表单验证
+		 */
+		function validatorInit() {
+		    $('#frm_detail').bootstrapValidator({
+			    feedbackIcons: {
+			        valid: 'glyphicon glyphicon-ok',
+			        invalid: 'glyphicon glyphicon-remove',
+			        validating: 'glyphicon glyphicon-refresh'
+			    },
+			    fields: {	  	 
+			    	tcode : {
+						validators : {
+							notEmpty : {message : '类型代码不能为空!'},
+							stringLength : {min : 3, max : 50, message : '类型代码长度必须在3-50之间!' }
+						}
+					},
+					tname : {
+						validators : {
+							notEmpty : {message : '类型名称不能为空!'},
+							stringLength : {min : 2, max : 50, message : '真实姓名必须在2-50之间!' }
+						}
+					},
+					content : {
+						validators : {
+							notEmpty : {message : '代码列表不能为空!'},
+							stringLength : {max : 2000, message : '代码列表不能超过2000个字符!' }
+						}
+					}
+				}
+			});
+		
+			$('#btn_save').click(function() {
+				$('#frm_detail').bootstrapValidator('validate');
+			});
+		}	
+		/*]]>*/
+	</script>
+</body>
+</html>

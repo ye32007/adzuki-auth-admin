@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+        layout:decorator="templates/list_div_layout">
+
+<head>
+	<title>账号管理</title>
+</head>
+
+<body>
+	<div layout:fragment="query_form">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">用户名称：</label>
+					<div class="col-sm-8">
+						<input name="username" class="form-control" placeholder="用户名称"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">真实姓名：</label>
+					<div class="col-sm-8">
+						<input name="chineseName" class="form-control" placeholder="真实姓名"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">性别：</label>
+					<div class="col-sm-8">
+						<select name="sex" class="form-control">
+							<option value="">-请选择-</option>
+							<option value="M">男</option>
+							<option value="W">女</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">手机号码：</label>
+					<div class="col-sm-8">
+						<input name="mobile" class="form-control" placeholder="手机号码"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">账号状态：</label>
+					<div class="col-sm-8">
+						<select name="locked" class="form-control">
+							<option value="">-请选择-</option>
+							<option value="0">启用</option>
+							<option value="1">锁定</option>
+						</select>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	<div layout:fragment="detail_form">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">用户名称 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="username" class="form-control" placeholder="用户名称" maxlength="20"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">性别 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<select name="sex" class="form-control">
+							<option value="M" selected="selected">男</option>
+							<option value="W">女</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">真实姓名 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="chineseName" class="form-control" placeholder="真实姓名" maxlength="20"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">手机号码 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="mobile" class="form-control" placeholder="手机号码" maxlength="20"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">昵称</label>
+					<div class="col-sm-8">
+						<input name="nickname" class="form-control" placeholder="昵称" maxlength="20"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">邮箱地址</label>
+					<div class="col-sm-8">
+						<input name="email" class="form-control" placeholder="邮箱地址" maxlength="50"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="" class="col-sm-2 control-label">备注</label>
+					<div class="col-sm-10">
+						<textarea name="memo" class="form-control" placeholder="备注" rows="5" maxlength="200"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<footer layout:fragment="footer">
+		<div class="modal fade" id="mdl_role" tabindex="-1" role="dialog"
+			aria-labelledby="menuModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="menuModalLabel">角色菜单</h4>
+					</div>
+					<div class="modal-body" style="height: 500px;overflow: auto;">
+						<iframe id="ifrm_role" src="" width="100%" height="460" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+					</div>
+					<div class="modal-footer">
+						<button id="btn_save" type="button" class="btn btn-primary" onclick="javascript:saveRole();">保存</button>
+						<button id="btn_close" type="button" class="btn btn-default"  data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+	<script type="text/javascript" layout:fragment="foot_script">
+		/*<![CDATA[*/
+		var pageSetting = {
+			modelName : '账号',
+			resetPath : '.',
+			buttons : [
+				{'text':'添加', 'class':'btn-default', 'click':'showAddDialog'},
+				{'text':'打开', 'class':'btn-default', 'click':'showEditDialog'},
+				{'text':'删除', 'class':'btn-default', 'click':'deleteUser'},
+				{'text':'分配角色', 'class':'btn-default', 'click':'showRoleDialog'},
+				{'text':'锁定/解锁', 'class':'btn-default', 'click':'updateLocked'},
+				{'text':'重置密码', 'class':'btn-default', 'click':'resetPassword'},
+				{'text':'刷新', 'class':'btn-default', 'click':'refresh'}
+			]
+		};
+		
+		$(function(){
+			//数据表结构定义
+			$('#tbl_query').e7table({
+				url : 'query',
+				pageSize: 10,
+				autoLoading: true,			//控件初始化后，自动远程请求数据
+				selectType: 'single',
+				sortName: 'createTime',		//排序列名
+				sortOrder: 'desc',			//排序方向
+				columns : [
+					{title: '用户名称', field: 'username'},
+					{title: '真实姓名', field: 'chineseName'},
+					{title: '性别', field: 'sex', formatter: function(value, row, index) {
+						if(value == 'W') return '女';
+						if(value == 'M') return '男';
+					}},
+					{title: '手机号码', field: 'mobile'},
+					{title: '邮箱地址', field: 'email'},
+					{title: '账号状态', field: 'locked', formatter: function(value, row, index) {
+						if(value) {
+							return '<code>锁定</code>';
+						} else {
+							return '<code class="text-success bg-success">正常</code>';
+						}
+					}},
+					{title: '创建日期', field: 'createdTime', formatter: function(value, row, index) {
+						return new Date(value).format();
+					}}
+				],
+				onDblclick : function(index, row) {
+					showEditDialog();
+				}
+			});
+			
+			validatorInit();
+		});
+		
+		/***
+		 * 表单验证
+		 */
+		function validatorInit() {
+		    $('#frm_detail').bootstrapValidator({
+			    feedbackIcons: {
+			        valid: 'glyphicon glyphicon-ok',
+			        invalid: 'glyphicon glyphicon-remove',
+			        validating: 'glyphicon glyphicon-refresh'
+			    },
+			    fields: {	  	 
+			    	username : {
+						validators : {
+							notEmpty : {message : '用户名不能为空'},
+							stringLength : {min : 3, max : 20, message : '用户名长度必须在3-20之间' }
+						}
+					},
+					chineseName : {
+						validators : {
+							notEmpty : {message : '真实姓名不能为空'},
+							stringLength : {min : 2, max : 20, message : '真实姓名必须在2-20之间' }
+						}
+					},
+					mobile : {
+						validators : {
+							notEmpty : {message : '手机号码不能为空'},
+							regexp : {regexp : /^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message : '手机号码格式不正确' },
+						}
+					},
+					email : {
+						validators : {
+							emailAddress : {message : '邮箱地址格式不正确'}
+						}
+					}
+				}
+			});
+		
+			$('#btn_save').click(function() {
+				$('#frm_detail').bootstrapValidator('validate');
+			});
+		}
+
+		function deleteUser() {
+            var rows = $('#tbl_query').e7table('getSelectedRows');
+            if(rows.length == 0) {
+                bootbox.alert({'title':'错误消息', 'message':'请选择数据。'});
+                return;
+            } else if(rows.length > 1) {
+                bootbox.alert({'title':'错误消息', 'message':'一次操作一条数据。'});
+                return;
+            }
+
+            bootbox.confirm({
+                buttons : {
+                    confirm : {label : '确定', className : 'btn-info'},
+                    cancel : {label : '取消', className : 'btn-cancel'}
+                },
+                className : "del-model",
+                message : '确定要删除此用户？',
+                callback : function(result) {
+                    if (!result) return;
+
+                    E7.post(pageSetting.resetPath + '/del', {'id':rows[0]['id']}, function(data) {
+                        bootbox.alert({'title' : "消息",'message' : '删除成功！'});
+                        refresh();
+                    });
+                },
+                title : '删除确认'
+            });
+		}
+		
+		function updateLocked() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据。'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次操作一条数据。'});
+				return;
+			}
+			
+			var operateType = rows[0].locked ? '解锁' : '锁定';
+			
+			bootbox.confirm({
+				buttons : {
+					confirm : {label : '确定', className : 'btn-info'},
+					cancel : {label : '取消', className : 'btn-cancel'}
+				},
+				className : "del-model",
+				message : '确定要' + operateType + '？',
+				callback : function(result) {
+					if (!result) return;
+					
+					E7.post(pageSetting.resetPath + '/updateLocked', {'id':rows[0]['id'], 'locked':!rows[0]['locked']}, function(data) {
+						bootbox.alert({'title' : "消息",'message' : operateType + '成功！'});
+						refresh();
+					});
+				},
+				title : operateType + '确认'
+			});			
+		}
+		
+		var currentUserId;
+		function showRoleDialog() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据。'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次操作一条数据。'});
+				return;
+			}
+			
+			currentUserId = rows[0]['id'];
+			
+			$('#ifrm_role').attr('src', '');
+			$('#ifrm_role').attr('src', '/user/role?userId=' + currentUserId);
+			
+			$('#mdl_role').modal('show');
+		}
+		
+		function saveRole(){
+			var arr = $('#ifrm_role')[0].contentWindow.getSelected(); 
+			
+			bootbox.confirm({
+				buttons : {
+					confirm : {label : '确定', className : 'btn-info'},
+					cancel : {label : '取消', className : 'btn-cancel'}
+				},
+				className : "del-model",
+				message : '确定要修改用户角色？',
+				callback : function(result) {
+					if (!result) return;
+					
+					E7.post('/user/saveRole', {'userId' : currentUserId, 'ids' : arr.join(',')}, function(data) {
+						bootbox.alert({'title' : "消息",'message' : '修改成功！'});
+						$('#mdl_role').modal('hide');
+					});
+				},
+				title : "修改确认"
+			});			
+		}
+		
+		function resetPassword() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据。'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次只能重置一条数据。'});
+				return;
+			}
+			
+			bootbox.confirm({
+				buttons : {
+					confirm : {label : '确定', className : 'btn-info'},
+					cancel : {label : '取消', className : 'btn-cancel'}
+				},
+				className : "del-model",
+				message : '确定要重置密码？',
+				callback : function(result) {
+					if (!result) return;
+					
+					E7.post(pageSetting.resetPath + '/resetPassword', {'id' : rows[0]['id']}, function(data) {
+						bootbox.alert({'title' : "消息",'message' : '重置密码成功！'});
+					});
+				},
+				title : "重置密码确认"
+			});			
+		}
+		
+		/*]]>*/
+	</script>
+</body>
+</html>

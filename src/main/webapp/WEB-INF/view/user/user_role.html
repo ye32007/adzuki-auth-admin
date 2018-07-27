@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+	<title>天安车联网</title>
+	<link rel="stylesheet" th:href="@{/resources/bootstrap/css/bootstrap.min.css}"/>	
+	<link rel="stylesheet" th:href="@{/resources/dist/css/skins/_all-skins.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/AdminLTE.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/font-awesome.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/ionicons.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/plugins/bootstrapValidator/bootstrapValidator.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/e7/css/e7-0.2.css}"/>
+</head>
+
+<body style="background: white;overflow-y:auto;">
+	<!-- Main content -->
+	<section id="sec_main" class="content">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<div class="box-header">
+						<h3 class="box-title">信息预览</h3>
+						<div class="box-tools">
+							<button class="btn btn-box-tool" data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+						</div>
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body table-responsive no-padding">
+						<table id="tbl_query" class="table table-hover"></table>
+					</div>					
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<script th:src="@{/resources/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootbox/bootbox.min.js}"></script>
+	<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootstrapValidator/bootstrapValidator.min.js}"></script>
+	<script th:src="@{/resources/dist/js/app.min.js}"></script>
+	<script th:src="@{/resources/e7/e7util-0.2.js}"></script>
+	<script th:src="@{/resources/e7/e7table/e7table-0.2.js}"></script>
+	<script th:src="@{/resources/e7/e7crud.js}"></script>
+	
+	
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var ids = JSON.parse([[${ids}]]);
+		$(function(){
+			//数据表结构定义
+			$('#tbl_query').e7table({
+				url : [[@{/role/query4alloc}]],
+				pageSize: 10,
+				autoLoading: true,			//控件初始化后，自动远程请求数据
+				pagination : false,
+				selectType: 'multiple',
+				sortName: 'createTime',		//排序列名
+				sortOrder: 'desc',			//排序方向
+				columns : [
+					{title: '角色代码', field: 'code'},
+					{title: '角色名称', field: 'name'},
+					{title: '角色类型', field: 'system', formatter: function(value, row, index) {
+						if(value) {
+							return '系统';
+						} else {
+							return '自定义';
+						}
+					}},
+					{title: '角色状态', field: 'locked', formatter: function(value, row, index) {
+						if(value) {
+							return '<code>锁定</code>';
+						} else {
+							return '<code class="text-success bg-success">正常</code>';
+						}
+					}},
+					{title: '创建日期', field: 'createdTime', formatter: function(value, row, index) {
+						return new Date(value).format();
+					}}
+				],
+				onLoadSuccess : function(data) {
+					for (var i = 0; i < ids.length; i++) {
+						$('#tbl_query').e7table('selectById', ids[i]); 
+					}
+				}
+			});
+		});
+		
+		function getSelected(){
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			
+			var ids = []
+			for(var i=0; i< rows.length; i++) {
+				ids.push(rows[i].id);
+			}
+			
+			return ids;
+		}
+		
+		/*]]>*/
+	</script>
+</body>
+</html>

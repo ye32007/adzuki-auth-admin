@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adzuki.admin.mapper.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.adzuki.admin.entity.Menu">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="folder" jdbcType="BIT" property="folder" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="permit" jdbcType="VARCHAR" property="permit" />
+    <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="buttons" jdbcType="VARCHAR" property="buttons" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+</mapper>

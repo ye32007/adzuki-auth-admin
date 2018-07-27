@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adzuki.admin.mapper.TypeCodeMapper">
+  <resultMap id="BaseResultMap" type="com.adzuki.admin.entity.TypeCode">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tcode" jdbcType="VARCHAR" property="tcode" />
+    <result column="tname" jdbcType="VARCHAR" property="tname" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,112 @@
+<script th:inline="javascript">
+	if(window.parent != window) {
+		window.parent.location = window.logcation;
+	}
+</script>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>adzuki管理平台登录</title>
+    <!-- <meta http-equiv="refresh" content="2"> -->
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'/>
+    <link th:href="@{/resources/dist/css/AdminLTE.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />    
+    <link th:href="@{/resources/plugins/iCheck/all.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/style.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/dist/kl-iconfont/iconfont.css}" rel="stylesheet" />
+</head>
+  
+<body class="skin-blue sidebar-mini">
+	<div>
+		<div id="header" class="w-l-header">
+		</div>
+		<div id="body" class="w-l-body">
+			<form id="frm_login"  method="post">
+				<div id="form" class="w-l-b-from">
+					<div class="form-group has-feedback">
+						<span class="icon iconfont icon-kl-account form-control-feedback"></span>
+						<input name="uname" class="form-control" placeholder="请输入用户名"/>
+					</div>
+					<div class="form-group has-feedback">
+						<span class="icon iconfont icon-kl-password form-control-feedback"></span>
+						<input name="pword" type="password" class="form-control" placeholder="请输入用户密码"/>
+					</div>
+					<a href="javascript:login();" class="btn btn-primary btn-flat btn-block w-sub">登录</a>
+					<a href="/forget" class="w-get">忘记密码</a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<script th:src="@{/resources/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<script th:src="@{/resources/plugins/iCheck/icheck.min.js}"></script>
+	<script th:src="@{/resources/plugins/slimScroll/jquery.slimscroll.min.js}"></script>
+	<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootbox/bootbox.min.js}"></script>
+	<script th:src="@{/resources/e7/e7util-0.2.js}"></script>
+	
+    <script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {			
+			$('[name="uname"]').focus();
+			$('[name="uname"]').select();
+			
+			$('[name="uname"]').keydown(function(event) {
+				if (event.keyCode == "13") {
+					$('[name="pword"]').focus();
+				}
+			});
+			
+			$('[name="pword"]').keydown(function(event) {
+				if (event.keyCode == "13") {
+					login();
+				}
+			});
+			
+
+			$(window).resize(function() {
+				clearTimeout(window.resizeEvent);
+				resizeEvent = setTimeout(function(){
+					resize();
+				}, 200);
+			});
+
+			resize();
+		});
+		
+		function login() {
+			var params = E7.serialForm('#frm_login');
+			if(params.uname.trim() == ''){
+				bootbox.alert({'title':'错误', 'message':'用户名必须填写！'});
+				return;
+			}
+			if(params.pword.trim() == ''){
+				bootbox.alert({'title':'错误', 'message':'密码必须填写！'});
+				return;
+			}
+			
+			E7.post('login', params, function(result) {
+				if(result && result.code == 0) {
+					location = [[@{/}]];
+				}
+			});	
+		}
+
+		var headMinHeight = 100;
+		var bodyMinHeight = 330;
+		function resize(){
+			var winHeight = $(window).height();
+			
+			if(winHeight <= (100 + 600)) {
+				$('body').css('padding-top', '30px');
+			} else {
+				$('body').css('padding-top', ((winHeight-700)/2)+'px');
+			}
+		}
+
+		/*]]>*/
+	</script>
+</body>
+</html>

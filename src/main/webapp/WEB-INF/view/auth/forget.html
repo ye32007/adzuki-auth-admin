@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>忘记密码</title>
+    <meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'/>
+    <link th:href="@{/resources/dist/css/AdminLTE.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />    
+    <link th:href="@{/resources/plugins/iCheck/all.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/style.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/dist/kl-iconfont/iconfont.css}" rel="stylesheet"/>
+  </head>
+  <body class="skin-blue sidebar-mini">
+  <form id="frm_detail" class="form-horizontal" > 
+    <div class="w-forgot">
+      <div class="w-forgot-header"><img src="" alt=""/></div>
+      <div class="w-forgot-body">
+        <div class="w-forgot-b-from">
+          <h4 class="w-forgot-b-f-title">找回密码</h4>
+          <p class="w-forgot-b-f-info">请输入账号及绑定的手机号，进行密码找回</p>
+          <div class="form-group has-feedback">
+            <span class="icon iconfont icon-kl-account form-control-feedback"></span>
+            <input type="text" id="username" name="username" class="form-control" placeholder="请输入用户名"/>
+          </div>
+          <div class="form-group has-feedback">
+            <span class="icon iconfont icon-kl-password form-control-feedback"></span>
+            <input type="text" id="mobile" name="mobile" class="form-control" placeholder="请输入手机号"/>
+          </div>
+          <a href="javascript:void(0)" class="btn btn-primary btn-flat btn-block w-sub" id="btn_save" onclick="forgetHandler()">提交</a>
+          <a href="/login" class="w-get">登陆</a>
+        </div>
+      </div>
+    </div>
+   </form>
+<script th:src="@{/resources/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script th:src="@{/resources/plugins/bootbox/bootbox.min.js}"></script>
+<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/resources/plugins/bootstrapValidator/bootstrapValidator.min.js}"></script>
+<script th:src="@{/resources/dist/js/app.min.js}"></script>
+<script th:src="@{/resources/e7/e7util-0.2.js}"></script>
+  <script type="text/javascript">
+   $(function(){
+	validatorInit();
+});
+   /***
+ * 表单验证
+ */
+function validatorInit() {
+    $('#frm_detail').bootstrapValidator({
+	    feedbackIcons: {
+	        valid: 'glyphicon glyphicon-ok',
+	        invalid: 'glyphicon glyphicon-remove',
+	        validating: 'glyphicon glyphicon-refresh'
+	    },
+	    fields: {	  	 
+	    	username : {
+				validators : {
+					notEmpty : {message : '用户名不能为空'}
+				}
+			},
+			mobile : {
+				validators : {
+					notEmpty : {message : '手机号不能为空'},
+				}
+			}
+		}
+	});
+	$('#btn_save').click(function() {
+		$('#frm_detail').bootstrapValidator('validate');
+	});
+}
+function forgetHandler(){
+  	$('#frm_detail').bootstrapValidator('validate');
+	if (!$('#frm_detail').data('bootstrapValidator').isValid()) {
+		return;
+	}
+	bootbox.confirm({
+		buttons : {
+			confirm : {label : '确定', className : 'btn-info'},
+			cancel : {label : '取消', className : 'btn-cancel'}
+		},
+		className : "del-model",
+		message : '确定找回密码？',
+		callback : function(result) {
+			if (!result) return;
+			
+			E7.post('[[@{/forgetPassword}]]', E7.serialForm('#frm_detail'), function(data) {
+				bootbox.alert({'title' : "找回结果",'message' : '密码找回成功！' + data.data});
+			});
+		},
+		title : '找回密码'
+	});	
+}
+</script>
+  </body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="templates/list_div_layout2">
+
+<head>
+	<title>角色管理</title>
+	<link rel="stylesheet" th:href="@{/resources/plugins/ligerUI/ligerui-tree.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/plugins/ligerUI/ligerui-menu.css}"/>
+	<style type="text/css">
+		.l-tree span{
+			display: inline;
+			margin-left: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div layout:fragment="query_form">
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">角色代码：</label>
+					<div class="col-sm-8">
+						<input name="code" class="form-control" placeholder="角色代码"/>
+					</div>
+				</div>
+			</div>	
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">角色名称：</label>
+					<div class="col-sm-8">
+						<input name="name" class="form-control" placeholder="角色名称"/>
+					</div>
+				</div>
+			</div>		
+			<div class="col-lg-3 col-md-4 col-sm-6">
+				<div class="form-group">
+					<label for="" class="col-sm-4 control-label">角色状态：</label>
+					<div class="col-sm-8">
+						<select name="locked" class="form-control">
+							<option value="">-请选择-</option>
+							<option value="0">启用</option>
+							<option value="1">锁定</option>
+						</select>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	<div layout:fragment="detail_form">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="" class="col-sm-3 control-label">角色代码 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="code" class="form-control" placeholder="角色代码" maxlength="20"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="" class="col-sm-3 control-label">角色名称 <span style="color:red">*</span></label>
+					<div class="col-sm-8">
+						<input name="name" class="form-control" placeholder="角色名称" maxlength="20"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="" class="col-sm-3 control-label">备注</label>
+					<div class="col-sm-8">
+						<textarea name="memo" class="form-control" placeholder="备注" rows="5" maxlength="200"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<footer layout:fragment="footer">
+		<script th:src="@{/resources/plugins/ligerUI/base.js}"></script>
+		<script th:src="@{/resources/plugins/ligerUI/ligerTree.js}"></script>
+		<script th:src="@{/resources/plugins/ligerUI/ligerMenu.js}"></script>
+		
+		<div class="modal fade" id="mdl_menu" tabindex="-1" role="dialog"
+			aria-labelledby="menuModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="menuModalLabel">角色菜单</h4>
+					</div>
+					<div class="modal-body" style="height: 490px; max-height: 490px;overflow: auto;">
+						<iframe id="ifrm_menu" src="" width="100%" height="450" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+					</div>
+					<div class="modal-footer">
+						<button id="btn_save" type="button" class="btn btn-primary" onclick="javascript:saveMenu();">保存</button>
+						<button id="btn_close" type="button" class="btn btn-default"  data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var pageSetting = {
+			modelName : '角色',
+			resetPath : [[@{/role}]],
+			buttons : [
+				{'text':'添加', 'class':'btn-default', 'click':'showAddDialog'},
+				{'text':'打开', 'class':'btn-default', 'click':'showEdit'},
+				{'text':'删除', 'class':'btn-default', 'click':'showDel'},
+				{'text':'分配菜单', 'class':'btn-default', 'click':'showMenuDialog'},
+				{'text':'刷新', 'class':'btn-default', 'click':'refresh'}
+			]
+		};
+		
+		$(function(){
+			//数据表结构定义
+			$('#tbl_query').e7table({
+				url : [[@{/role/query}]],
+				pageSize: 10,
+				autoLoading: true,			//控件初始化后，自动远程请求数据
+				selectType: 'single',
+				columns : [
+					{title: '角色代码', field: 'code'},
+					{title: '角色名称', field: 'name'},
+					{title: '角色类型', field: 'system', formatter: function(value, row, index) {
+						if(value) {
+							return '<code>系统</code>';
+						} else {
+							return '自定义';
+						}
+					}},
+					{title: '是否可分配', field: 'assignable', formatter: function(value, row, index) {
+						if(value) {
+							return '<code class="text-success bg-success">可以</code>';
+						} else {
+							return '<code>不可</code>';
+						}
+					}},
+					{title: '创建日期', field: 'createdTime', formatter: function(value, row, index) {
+						return new Date(value).format();
+					}}
+				],
+				onDblclick : function(index, row) {
+					showEdit();
+				}
+			});
+			
+			validatorInit();
+		});
+		
+		/***
+		 * 表单验证
+		 */
+		function validatorInit() {
+		    $('#frm_detail').bootstrapValidator({
+			    feedbackIcons: {
+			        valid: 'glyphicon glyphicon-ok',
+			        invalid: 'glyphicon glyphicon-remove',
+			        validating: 'glyphicon glyphicon-refresh'
+			    },
+			    fields: {	  	 
+			    	code : {
+						validators : {
+							notEmpty : {message : '角色代码不能为空'},
+							stringLength : {min : 3, max : 20, message : '角色代码长度必须在3-20之间' }
+						}
+					},
+					name : {
+						validators : {
+							notEmpty : {message : '角色名称不能为空'},
+							stringLength : {min : 2, max : 20, message : '角色名称必须在2-20之间' }
+						}
+					}
+				}
+			});
+		
+			$('#btn_save').click(function() {
+				$('#frm_detail').bootstrapValidator('validate');
+			});
+		}	
+		
+		function updateLocked() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据。'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次操作一条数据。'});
+				return;
+			}
+			
+			var operateType = rows[0].locked ? '解锁' : '锁定';
+			
+			bootbox.confirm({
+				buttons : {
+					confirm : {label : '确定', className : 'btn-info'},
+					cancel : {label : '取消', className : 'btn-cancel'}
+				},
+				className : "del-model",
+				message : '确定要' + operateType + '？',
+				callback : function(result) {
+					if (!result) return;
+					
+					E7.post(pageSetting.resetPath + '/updateLocked', {'id':rows[0]['id'], 'locked':!rows[0]['locked']}, function(data) {
+						bootbox.alert({'title' : "消息",'message' : operateType + '成功！'});
+						refresh();
+					});
+				},
+				title : operateType + '确认'
+			});			
+		}
+		
+		function showEdit() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据！'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次只能编辑一条数据！'});
+				return;
+			}
+			
+			if(rows[0].system) {
+				showViewDialog();
+			} else {
+				showEditDialog();
+			}
+		}
+		
+		function showDel() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据！'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次只能编辑一条数据！'});
+				return;
+			}
+			
+			if(rows[0].system) {
+				bootbox.alert({'title':'错误消息', 'message':'系统角色，不能删除！'});
+			} else {
+				del();
+			}
+		}
+		
+		var currentRoleId;
+		function showMenuDialog() {
+			var rows = $('#tbl_query').e7table('getSelectedRows');
+			if(rows.length == 0) {
+				bootbox.alert({'title':'错误消息', 'message':'请选择数据。'});
+				return;
+			} else if(rows.length > 1) {
+				bootbox.alert({'title':'错误消息', 'message':'一次操作一条数据。'});
+				return;
+			}
+			
+			currentRoleId = rows[0]['id'];
+			
+			$('#ifrm_menu').attr('src', '');
+			$('#ifrm_menu').attr('src', [[@{/role/menu?roleId=}]] + currentRoleId);
+			
+			$('#mdl_menu').modal('show');
+		}
+		
+		function saveMenu(){
+			var arr = $('#ifrm_menu')[0].contentWindow.getSelected(); 
+			
+			bootbox.confirm({
+				buttons : {
+					confirm : {label : '确定', className : 'btn-info'},
+					cancel : {label : '取消', className : 'btn-cancel'}
+				},
+				className : "del-model",
+				message : '确定修改角色菜单？',
+				callback : function(result) {
+					if (!result) return;
+					
+					E7.post([[@{/role/saveMenu}]], {'roleId' : currentRoleId, 'ids' : arr.join(',')}, function(data) {
+						bootbox.alert({'title' : "消息",'message' : '修改成功！'});
+						$('#mdl_menu').modal('hide');
+					});
+				},
+				title : "修改确认"
+			});			
+		}
+		/*]]>*/
+	</script>
+	</footer>
+</body>
+</html>

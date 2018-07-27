@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+	<link rel="stylesheet" th:href="@{/resources/bootstrap/css/bootstrap.min.css}"/>	
+	<link rel="stylesheet" th:href="@{/resources/dist/css/skins/_all-skins.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/AdminLTE.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/font-awesome.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/dist/css/ionicons.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/plugins/bootstrapValidator/bootstrapValidator.min.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/e7/css/e7-0.2.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/e7/e7table/e7table-0.2.css}"/>
+	<link rel="stylesheet" th:href="@{/resources/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css}" />
+</head>
+
+<body>
+	<!-- Main content -->
+	<section id="sec_main" class="content">
+		<!-- 信息列表 -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box box-info">
+					<!-- /.box-header -->
+					<div class="box-body table-responsive no-padding">
+						<table id="tbl_query" class="table table-hover"></table>
+					</div>					
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<!-- /.content -->
+	<script th:src="@{/resources/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootbox/bootbox.min.js}"></script>
+    <script th:src="@{/resources/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+    <script th:src="@{/resources/plugins/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+	<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootstrapValidator/bootstrapValidator.min.js}"></script>
+	<script th:src="@{/resources/dist/js/app.min.js}"></script>
+	<script th:src="@{/resources/e7/e7util-0.2.js}"></script>
+	<script th:src="@{/resources/e7/e7table/e7table-0.2.js}"></script>
+	<script th:src="@{/resources/e7/e7crud-0.2.js}"></script>
+	
+	<footer layout:fragment="footer"></footer>
+	
+	<script th:inline="javascript">	
+		/*<![CDATA[*/
+		$(function() {
+			if(!pageSetting || !pageSetting.buttons || pageSetting.buttons.length == 0) return;
+			for(var i=0; i < pageSetting.buttons.length; i++) {
+				var button = pageSetting.buttons[i];
+				$('#div_buttons').append(' <button class="btn ' + (button['class']?button['class']:'') + '" onclick="javascript:' + button['click'] +'();">' + button['text'] + '</button> ');
+			}
+		});
+		//自适应
+		var templateListDivResizeTimer = null;
+		$(window).resize(function(){
+			clearTimeout(templateListDivResizeTimer);
+			templateListDivResizeTimer = setTimeout(layoutResize, 100);
+		});
+		function layoutResize() {
+			var criteria = $('#div_criteria.flowlayout > div');
+			criteria.removeClass();
+			if(document.body.clientWidth >= 1200) {
+				criteria.addClass('col-md-4');
+			} else {
+				criteria.addClass('col-md-6');
+			}
+		}
+		layoutResize();
+		/*]]>*/
+	</script>
+	
+	<script type="text/javascript" layout:fragment="foot_script"></script>
+</body>
+</html>

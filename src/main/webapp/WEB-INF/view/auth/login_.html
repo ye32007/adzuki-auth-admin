@@ -1,0 +1,158 @@
+<script th:inline="javascript">
+	if(window.parent != window) {
+		window.parent.location = window.logcation;
+	}
+</script>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta loginFlag="true"/>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>adzuki管理平台登录</title>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+	<link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon" media="screen" />
+	<link rel="stylesheet" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/resources/dist/css/AdminLTE.min.css}" />
+	<style type="text/css">
+		html {
+			height:100%;
+			min-height:100%;
+			padding: 0px;	
+		}
+		body {
+			background: url('./resources/image/bg_login.jpg') no-repeat center center;
+			filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+			-moz-background-size:100% 100%;
+			background-size:100% 100%;
+			height:100%;
+			min-height:100%;
+			margin: 0px;
+			padding: 0px;
+			overflow: hidden;
+		}
+		
+		.login-logo a{
+			color: white;
+		}
+		
+		/*form.less:404*/
+		.form-control-feedback {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 2;
+			display: block;
+			width: 34px;
+			height: 34px;
+			line-height: 34px;
+			text-align: center;
+			pointer-events: none;
+		}
+		
+		/*form.less:401*/
+		.has-feedback .form-control {
+			padding-left: 42.5px;
+		}
+		
+		.login-box-body {
+			background: #d5e9f5;
+			padding: 60px 40px 40px 40px;
+			border-top: 0;
+			color: #666;
+			border-radius: 6px;
+		}
+		
+		.form-control:focus {
+			border-color: #54bd2b;
+			box-shadow: 0 0px 5px 0 rgba(58, 162, 17, 0.4);
+		}
+		
+		.login-box-body .form-control-feedback, .register-box-body .form-control-feedback
+			{
+			color: #54bd2b;
+		}
+		
+		btn_login {
+			border-radius: 4px;
+			box-shadow: 0 5px 10px 0 rgba(58, 162, 17, 0.4);
+			background: #54bd2b;
+			border: solid 1px #54bd2b;
+		}
+	</style>
+</head>
+<body>
+	<div class="login-box">
+		<div class="login-logo">
+			<a href="javascript:void(0)"><b>adzuki管理平台</b></a>
+		</div>
+		<!-- /.login-logo -->
+		<div class="login-box-body">
+			<form id="frm_login"  method="post">
+				<div class="form-group has-feedback">
+					<input name="uname" type="text" class="form-control" placeholder="用户名">
+					<span class="glyphicon glyphicon-user form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<input name="pword" type="password" class="form-control" placeholder="密码">
+					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<button id="btn_login" type="button" class="btn btn-success btn-block btn-flat" style="background-color: #54bd2b;" onclick="javascript:login();">登录</button> 
+					</div>
+					<div class="col-xs-6">
+						<button id="btn_reset" type="button" class="btn btn-block btn-flat" onclick="javascript:$('#frm_login')[0].reset();">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- /.login-box-body -->
+	</div>
+	<!-- /.login-box -->
+
+	<script th:src="@{/resources/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/resources/plugins/bootbox/bootbox.min.js}"></script>
+	<script th:src="@{/resources/e7/e7util-0.2.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {			
+			$('[name="uname"]').focus();
+			$('[name="uname"]').select();
+			
+			$('[name="uname"]').keydown(function(event) {
+				if (event.keyCode == "13") {
+					$('[name="pword"]').focus();
+				}
+			});
+			
+			$('[name="pword"]').keydown(function(event) {
+				if (event.keyCode == "13") {
+					login();
+				}
+			});
+		});
+		
+		function login() {
+			var params = E7.serialForm('#frm_login');
+			if(params.uname.trim() == ''){
+				bootbox.alert({'title':'错误', 'message':'用户名必须填写！'});
+				return;
+			}
+			if(params.pword.trim() == ''){
+				bootbox.alert({'title':'错误', 'message':'密码必须填写！'});
+				return;
+			}
+			
+			E7.post('login', params, function(result) {
+				if(result && result.code == 0) {
+					location = [[@{/}]];
+				}
+			});	
+		}
+	
+		/*]]>*/
+	</script>
+</body>
+</html>
