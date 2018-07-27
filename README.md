@@ -12,6 +12,6 @@ docs/auth.sql
 
 ## 打包  & docker
 
-mvn clean package -Dmaven.test.skip=true -Ptest
-docker build -t adzuki-admin .
-docker run -d -p 8080:8080 --name adzuki-admin adzuki-admin
+1. mvn clean package -Dmaven.test.skip=true -Ptest
+2. docker build -t adzuki-admin .
+3. docker run -d -p 8080:8080 --name adzuki-admin adzuki-admin
